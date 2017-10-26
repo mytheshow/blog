@@ -7,6 +7,11 @@ class Users extends Model {
     public function login($email, $password, $auto){
         $user = $this->where('email',$email)->find();
         if(md5($password)==$user['password']){
+            //如果邮件未激活
+            if(!$user['confirmed']){
+                session('unconfirmed',$user['id']);
+                return -2 ;
+            }
             $request = request();
             $update = array(
                 'id'=>$user['id'],

@@ -19,7 +19,11 @@ class Auth extends Controller
             }
             $user = new Users();
             $res = $user->login($data['email'], $data['password'], isset($data['remember_me'])? $data['remember_me']:'n');
-            if($res > 0){
+            //如果未激活跳转到一个unconfirmed.html，可以点击再次发送一封邮箱，可以防止第一封没收到
+            if($res == -2){
+                return view('unconfirmed');
+            }
+            if($res == 1){
                 $this->redirect('/');
             }
             $flashed_messages[] = '邮箱或密码错误';
@@ -40,11 +44,12 @@ class Auth extends Controller
                     $this->assign('flashed_messages',$flashed_messages);
                     return view('register');
                 }
+
                 $user = model('Users');
                 $user->data([
                     'username'=>$data['username'],
                     'email'=>$data['email'],
-                    'password'=>$data['password'],
+                    'password'=>md5($data['password']),
                     'create_time'=>date('Y-m-d H:i:s')
                 ]);
                 $res = $user->save();
@@ -53,7 +58,7 @@ class Auth extends Controller
                     //激活密令
                     $activecode = encryption($token);
                     //收件人邮箱
-                    $toemail='916536984@qq.com';
+                    $toemail=$data['email'];
                     //发件人昵称
                     $name='php博客';
                     //邮件标题
@@ -62,7 +67,8 @@ class Auth extends Controller
                     $content="<h1>恭喜你，注册成功。</h1><a href=".$request->domain()."/active_user/$activecode>点击激活</a>";
                     //如果页面打印bool(true)则发送成功
                 if(send_mail($toemail,$name,$subject,$content)){
-                    $this->success('注册成功，跳转首页...','/login');
+                    $flashed_messages[] = '注册成功，请登陆邮箱激活';
+                    $this->assign('flashed_messages',$flashed_messages);
                 }
                 }else{
                     $flashed_messages[] = '注册失败';
@@ -103,5 +109,30 @@ class Auth extends Controller
         }
 
         $this->error('验证密令错误或过期,请重新登陆');
+    }
+
+    //再次发送激活邮件
+    public function confirm(Request $request){
+        if(session('?unconfirmed')){
+            $data = Users::get(session('unconfirmed'));
+            $token = time().'|'.$data['email'];
+            //激活密令
+            $activecode = encryption($token);
+            //收件人邮箱
+            $toemail=$data['email'];
+            //发件人昵称
+            $name='php博客';
+            //邮件标题
+            $subject='请激活您的账户';
+            //邮件内容
+            $content="<h1>恭喜你，注册成功。</h1><a href=".$request->domain()."/active_user/$activecode>点击激活</a>";
+            if(send_mail($toemail,$name,$subject,$content)){
+                session('unconfirmed',null);
+                $flashed_messages[] = '一封新邮件已经发送';
+                $this->assign('flashed_messages',$flashed_messages);
+                return view('unconfirmed');
+            }
+        }
+        abort(404);
     }
 }
