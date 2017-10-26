@@ -11,17 +11,28 @@ $(function () {
             validating: 'glyphicon glyphicon-refresh'
         },
 
-        live: 'disabled',
+        live: 'disabled',//验证失败后，提交按钮仍然是可选状态
 
         fields: {
             email: {
-                message: '用户名验证失败',
+                message: '用户名验证失败',//默认
+                verbose: false,
                 validators: {
                     notEmpty: {
-                        message: '用户名不能为空'
+                        message: '邮箱不能为空'
                     },
                     emailAddress: {
                         message: '邮箱地址格式有误'
+                    },
+                    remote: {
+                        url: '/ajax_email',
+                        message:"此邮箱已经注册",
+                        type: "post",
+                        dataType: 'json',
+                        data: {
+                            //默认传递的就是输入框的值
+                        },
+                        delay: 500 //延迟效果
                     }
                 }
             },
@@ -34,9 +45,42 @@ $(function () {
                         min: 6,
                         max: 18,
                         message: '用户名长度必须在6到18位之间'
+                    }
+                }
+            },
+            password2: {
+                validators: {
+                    notEmpty: {
+                        message: '确认密码不能为空'
                     },
-                },
-
+                    identical: {
+                        field: 'password',
+                        message: '两次密码必须一致'
+                    }
+                }
+            },
+            username:{
+                validators: {
+                    verbose: false,
+                    notEmpty: {
+                        message: '用户名不能为空'
+                    },
+                    stringLength: {
+                        min: 2,
+                        max: 8,
+                        message: '用户名长度必须在2到8位之间'
+                    },
+                    remote: {
+                        url: '/ajax_username',
+                        message:"此用户名已经注册",
+                        type: "post",
+                        dataType: 'json',
+                        data: {
+                            //默认传递的就是输入框的值
+                        },
+                        delay: 500 //延迟效果
+                    }
+                }
             }
         }
     });

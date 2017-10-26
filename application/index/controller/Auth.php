@@ -31,4 +31,26 @@ class Auth extends Controller
         return view('login');
     }
 
+    public function register(){
+        return view();
+    }
+    public function ajax_email(Request $request){
+        $email = $request->post('email');
+        $user = Users::get(['email' => $email]);
+        if ($user){
+            echo json_encode(['valid'=>false]);
+        }else{
+            echo json_encode(['valid'=>true]);
+        }
+    }
+    public function ajax_username(Request $request){
+        $username = $request->post('username');
+        $user = Users::get(['username' => $username]);
+        if ($user){
+            echo json_encode(['valid'=>false]);
+        }else{
+            echo json_encode(['valid'=>true]);
+        }
+    }
+
 }
