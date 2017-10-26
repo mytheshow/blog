@@ -6,8 +6,8 @@
         <h1>Register</h1>
     </div>
     <div class="col-md-4">
-        <form method="post" class="form" role="form">
-            <input id="csrf_token" name="csrf_token" value="ImUwYzhlNTFhNjFkYmVmMjNjODc5ZDU1YjYxOWQ4MDYwYjBlNDNjODQi.DNL6rw.kNukHItlDQvR5AdshfrBppO0KnI" type="hidden">
+        <form method="post" id="regForm" class="form" role="form">
+            <input type="hidden" name="__token__" value="{$Request.token}" />
             <div class="form-group "><label class="control-label" for="email">Email</label>
                 <input class="form-control" id="email" name="email" value="" type="text">
             </div>
