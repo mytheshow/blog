@@ -8,7 +8,7 @@ class Index extends Common
 //    ];
     public function index()
     {
-
+        $this->assign('user_msg',session('user_msg'));
         return view('index');
     }
 }

@@ -23,7 +23,8 @@ class Users extends Model {
             $auth=array(
                 'id' => $user['id'],
                 'username' => $user['username'],
-                'last_seen' => $user['last_seen']
+                'last_seen' => $user['last_seen'],
+                'last_login_ip' => $user['last_login_ip']
             );
             session('user_msg',$auth);
             //将用户名加密写入cookie
