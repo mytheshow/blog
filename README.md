@@ -1,7 +1,2 @@
-## 修改bsae.html
-
-> navbar当登陆后显示个人中心，未登陆显示login
-
-## 其他
-
-> 创建roles表，在users表增加一些字段
+1. 原来登陆后session存取的user_msg改为只存取uid
+2. 完成登陆后带有个人简介的功能

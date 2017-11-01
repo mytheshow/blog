@@ -245,6 +245,7 @@ return [
     ],
 
     //密钥
-    'SECRET_KEY' => '123456'
-
+    'SECRET_KEY' => '123456',
+    //超级管理员
+    'BLOG_ADMIN' => '916536984@qq.com'
 ];

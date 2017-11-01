@@ -44,13 +44,19 @@ class Auth extends Controller
                     $this->assign('flashed_messages',$flashed_messages);
                     return view('register');
                 }
-
+                $roles = db('roles');
+                if($data['email']==config('BLOG_ADMIN')){
+                    $role = $roles->where('name','Administrator')->find();
+                }else{
+                    $role = $roles->where('name','User')->find();
+                }
                 $user = model('Users');
                 $user->data([
                     'username'=>$data['username'],
                     'email'=>$data['email'],
                     'password'=>md5($data['password']),
-                    'create_time'=>date('Y-m-d H:i:s')
+                    'create_time'=>date('Y-m-d H:i:s'),
+                    'role_id'=>$role['id']
                 ]);
                 $res = $user->save();
                 if($res){
@@ -75,6 +81,7 @@ class Auth extends Controller
                     $this->assign('flashed_messages',$flashed_messages);
                 }
         }
+
         return view();
     }
     public function ajax_email(Request $request){
@@ -135,4 +142,5 @@ class Auth extends Controller
         }
         abort(404);
     }
+
 }

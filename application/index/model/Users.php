@@ -12,6 +12,9 @@ class Users extends Model {
                 session('unconfirmed',$user['id']);
                 return -2 ;
             }
+            //在更新之前，把上次登陆时间和ip存入cookie
+            cookie('last_seen', $user['last_seen']);
+            cookie('last_login_ip', $user['last_login_ip']);
             $request = request();
             $update = array(
                 'id'=>$user['id'],
@@ -20,13 +23,13 @@ class Users extends Model {
             );
             $this->update($update);
             //存入session
-            $auth=array(
-                'id' => $user['id'],
-                'username' => $user['username'],
-                'last_seen' => $user['last_seen'],
-                'last_login_ip' => $user['last_login_ip']
-            );
-            session('user_msg',$auth);
+//            $auth=array(
+//                'id' => $user['id'],
+//                'username' => $user['username'],
+//                'last_seen' => $user['last_seen'],
+//                'last_login_ip' => $user['last_login_ip']
+//            );
+            session('uid',$user['id']);
             //将用户名加密写入cookie
             if($auto=="y"){
                 cookie('auto',encryption($user['username'].'|'.$request->ip()),3600*24*30);

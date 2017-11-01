@@ -1,0 +1,19 @@
+{extend name="common/base" /}
+{block name="title"}个人简介{/block}
+{block name="page_content"}
+<div class="page-header">
+    <h1>{$user_msg.username}</h1>
+    <p>
+        {$user_msg.name}
+        来自：  <a href="http://maps.google.com/?q={$user_msg.location}">
+                  {$user_msg.location}
+                </a>
+    </p>
+    <p><a href="mailto:{$user_msg.email}">{$user_msg.email}</a></p>
+    <p>{$user_msg.about_me}</p>
+    <p>
+        上次登陆IP： {$user_msg.last_login_ip}<br/>
+        上次登陆时间： {$user_msg.last_seen}
+    </p>
+</div>
+{/block}
